@@ -1,5 +1,17 @@
 -- Criando Tabelas:
 
+	create table FUNCIONARIO(
+		cod_func int not null primary key,
+		nome varchar(50) not null,
+		dt_nasc date null,
+		salario float not null,
+	)
+	insert into funcionario
+	values (1,'João de Deus',NULL,10000);
+
+	alter table hospedagem 
+	add column cod_func int not null default 1 REFERENCES hospedagem(cod_func);
+
 	CREATE TABLE CATEGORIA (
 		COD_CAT INT NOT NULL,
 		NOME VARCHAR(50) NOT NULL,

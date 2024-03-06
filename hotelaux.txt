@@ -1,0 +1,62 @@
+-- 1. Categorias que possuam preços entre R$ 100,00 e R$ 200,00
+SELECT *
+FROM CATEGORIA 
+WHERE VALOR_DIA BETWEEN 100 AND 200;
+
+-- 2. Categorias cujos nomes possuam a palavra ‘Luxo’
+SELECT *
+FROM CATEGORIA 
+WHERE NOME ILIKE '%LUXO%';
+
+-- 5. Apartamentos cuja categoria tenha código 1, 2, 3, 11, 34, 54, 24, 12
+SELECT *
+FROM APARTAMENTO
+WHERE NUM IN  (1,2,3,11,34,54,24,12);
+
+-- 10. Maior preço de categoria
+SELECT MAX(VALOR_DIA)
+FROM CATEGORIA;
+
+-- 11. Menor preço de categoria.
+SELECT MIN(VALOR_DIA)
+FROM CATEGORIA;
+
+--17. Apartamentos que foram ocupados pelo menos 2 vezes
+SELECT A.* 
+FROM APARTAMENTO A
+NATURAL JOIN HOSPEDAGEM H
+GROUP
+
+
+--20. A data de nascimento do hóspede mais velho
+SELECT MIN(DT_NASC) FROM HOSPEDE;
+
+--21. A data de nascimento do hóspede mais novo.
+SELECT MAX(DT_NASC) FROM HOSPEDE;
+
+--26. O nome dos hóspedes que nunca se hospedaram no apartamento 201.
+SELECT *
+FROM HOSPEDE
+LEFT JOIN
+-- LEFT JOIN (
+-- 	select cod_hosp, num 
+-- 	from HOSPEDAGEM
+-- 	where num = 101) queridos
+HOSPEDAGEM H
+ON HOSPEDE.COD_HOSP = H.COD_HOSP
+WHERE NUM = 101
+
+---------------------------------------------------------------------------
+
+--
+--OBTER A QUANTIDADE DE HOSPEDAGENS PARA CADA NOME DE HÓSPEDE
+SELECT NOME, COD_HOS, COUNT(*) 
+FROM HOSPEDE NATURAL JOIN HOSPEDAGEM
+GROUP BY COD_HOSP
+
+--obs: Caso você use funções agregadas dentro de uma query group by, ela será aplicada para os valores de cada grupo. como assim? se por exemeplo, você agrupar os hóspedes por sexo e executar a função AVG(idade), para cada grupo, ele faria a média de idade dos homens, e a média de idade das mulheres
+
+--SELECT COD_HOSPEDE, COUNT(*) QUANTIDADE 
+--FROM HOSPEDAEM GROUP BY COD_HOSP
+
+--MIN E MAX DEVOLVEM UM INTEIRO!!!!!

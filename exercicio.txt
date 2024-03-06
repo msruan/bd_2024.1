@@ -1,131 +1,168 @@
-Crie os scripts SQL de criação e inserção de dados nas tabelas do banco de dados HOTEL. Em
-seguida, escreva consultas SQL para os itens abaixo.
---------------------------------------------------------------------------------------------------------------
+-- Criando Tabelas:
 
-1. Categorias que possuam preços entre R$ 100,00 e R$ 200,00.
-SELECT *
-FROM CATEGORIA 
-WHERE VALOR_DIA BETWEEN 100 AND 200;
+	create table FUNCIONARIO(
+		cod_func int not null primary key,
+		nome varchar(50) not null,
+		dt_nasc date null,
+		salario float not null,
+	)
+	insert into funcionario
+	values (1,'João de Deus',NULL,10000);
 
---------------------------------------------------------------------------------------------------------------
+	alter table hospedagem 
+	add column cod_func int not null default 1 REFERENCES hospedagem(cod_func);
 
-2. Categorias cujos nomes possuam a palavra ‘Luxo’.
-SELECT *
-FROM CATEGORIA 
-WHERE NOME ILIKE '%LUXO%';
+	CREATE TABLE CATEGORIA (
+		COD_CAT INT NOT NULL,
+		NOME VARCHAR(50) NOT NULL,
+		VALOR_DIA FLOAT NOT NULL,
+		CONSTRAINT PRI_CAT PRIMARY KEY(COD_CAT)
+	);
 
---------------------------------------------------------------------------------------------------------------
+	CREATE TABLE APARTAMENTO (
+		NUM INT NOT NULL PRIMARY KEY,
+		STATUS CHAR(1) NOT NULL,
+		COD_CAT INT NOT NULL,
+		CONSTRAINT EST_APTO FOREIGN KEY(COD_CAT) REFERENCES CATEGORIA(COD_CAT)
+	);
+	
+	CREATE TABLE HOSPEDE (
+		COD_HOSP INT NOT NULL,
+		NOME VARCHAR(50) NOT NULL,
+		DT_NASC DATE NOT NULL,
+		CONSTRAINT PRI_HOSP PRIMARY KEY(COD_HOSP)
+	);
+	
+	CREATE TABLE HOSPEDAGEM (
+		COD_HOSPEDA INT NOT NULL,
+		COD_HOSP INT NOT NULL,
+		NUM INT NOT NULL,
+		DT_ENT DATE NOT NULL,
+		DT_SAI DATE,
+		CONSTRAINT PRI_HOSPEDA PRIMARY KEY(COD_HOSPEDA),
+		CONSTRAINT EST_HOSP FOREIGN KEY(COD_HOSP) REFERENCES HOSPEDE(COD_HOSP),
+		CONSTRAINT EST_APTO FOREIGN KEY(NUM) REFERENCES APARTAMENTO(NUM)
+	);
+	
+	CREATE TABLE RESERVA (
+		COD_RES INT NOT NULL PRIMARY KEY,
+		COD_HOSP INT NOT NULL REFERENCES HOSPEDE(COD_HOSP),
+		NUM INT NOT NULL REFERENCES APARTAMENTO(NUM),
+		DT_RES DATE NOT NULL,
+		DT_PREV_ENT DATE NOT NULL,
+		DT_PREV_SAI DATE NOT NULL
+	);
 
-3. Nomes de categorias de apartamentos que foram ocupados há mais de 5 anos.
+-- Inserindo dados:
+ 
+	INSERT INTO CATEGORIA (COD_CAT, NOME, VALOR_DIA) 
+	VALUES 
+		(1, 'Econômica', 100.00), 
+		(2, 'Luxo', 300.00), 
+		(3, 'Premium', 500.00);
+		
+	INSERT INTO APARTAMENTO (NUM, STATUS, COD_CAT) 
+	VALUES 
+		(101, 'L', 1), 
+		(102, 'L', 1), 
+		(103, 'O', 2);
+		
+	INSERT INTO HOSPEDE (COD_HOSP, NOME, DT_NASC) 
+	VALUES 
+		(1, 'João Silva', '1985-05-01'), 
+		(2, 'Maria Santos', '1990-09-15'), 
+		(3, 'Pedro Souza', '1978-02-22');
+		
+	INSERT INTO HOSPEDAGEM (COD_HOSPEDA, COD_HOSP, NUM, DT_ENT, DT_SAI) 
+	VALUES 
+		(1, 1, 101, '2022-02-28', '2022-03-03'), 
+		(2, 2, 103, '2022-03-10', NULL), 
+		(3, 3, 102, '2022-03-15', '2022-03-20');
 
---------------------------------------------------------------------------------------------------------------
+-- Operadores importantes:
+	-- O operador "ilike" é utilizado para fazer a comparação de forma "case-insensitive"; 
+	-- O caractere "_" (underline) representa uma posição para qualquer caractere na sequência de caracteres;
+	-- O símbolo "%" é um caractere curinga na linguagem SQL que representa uma sequência de zero ou mais caracteres de qualquer tipo.
+	
+-- Operações básicas:
+	-- 1. Selecionar o nome dos hóspedes com código maior do que 2:
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE COD_HOSP > 2;
 
-4. Apartamentos que estão ocupados, ou seja, a data de saída está vazia.
+	-- 2. Selecionar o nome dos hóspedes que nasceram em 2000:
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE DT_NASC >= '2000-01-01' AND DT_NASC <= '2000-12-31';
 
---------------------------------------------------------------------------------------------------------------
+		-- Usando "between":
+			SELECT NOME 
+			FROM HOSPEDE 
+			WHERE DT_NASC BETWEEN '2000-01-01' AND '2000-12-31';
 
-5. Apartamentos cuja categoria tenha código 1, 2, 3, 11, 34, 54, 24, 12.
-6. Apartamentos cujas categorias iniciam com a palavra ‘Luxo’.
---------------------------------------------------------------------------------------------------------------
+	-- 3. Selecionar o nome dos hóspedes que começam com a letra "M":
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE NOME LIKE 'M%';
 
-7. Quantidade de apartamentos cadastrados no sistema.
-SELECT NUM
-FROM APARTAMENTO NATURAL JOIN HOSPEDAG
+		-- Usando "ilike":
+			SELECT NOME 
+			FROM HOSPEDE 
+			WHERE NOME ILIKE 'M%';
+	
+	-- 4. Selecionar o nome dos hóspedes cujos nomes contêm a letra "a":
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE NOME ILIKE '%A%';
 
---------------------------------------------------------------------------------------------------------------
+	-- 5. Selecionar o nome dos hóspedes cujos nomes não contêm a letra "a":
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE NOME NOT ILIKE '%A%';
 
+	-- 6. Selecionar o nome dos hóspedes cujo o nome começa com uma letra qualquer, seguida de "h"
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE NOME ILIKE '_H%';
 
-8. Somatório dos preços das categorias.
-9. Média de preços das categorias.
-10. Maior preço de categoria.
-11. Menor preço de categoria.
-12. O preço média das diárias dos apartamentos ocupados por cada hóspede.
-13. Quantidade de apartamentos para cada categoria.
-14. Categorias que possuem pelo menos 2 apartamentos.
-15. Nome dos hóspedes que nasceram após 1° de janeiro de 1970.
-16. Quantidade de hóspedes.
-17. Apartamentos que foram ocupados pelo menos 2 vezes.
-18. Altere a tabela Hóspede, acrescentando o campo "Nacionalidade".
-19.Quantidade de hóspedes para cada nacionalidade.
+	-- 7. Selecionar o código e o nome dos hóspedes que se hospedaram em um apartamento da categoria "2":
+		SELECT COD_HOSP, NOME 
+		FROM HOSPEDE 
+		WHERE COD_HOSP IN 
+		(SELECT COD_HOSP FROM HOSPEDAGEM WHERE NUM IN 
+		(SELECT NUM FROM APARTAMENTO WHERE COD_CAT = 2));
 
------------------------------------------------------------------------------------------------------------------
+	-- 8. Selecionar o nome dos hóspedes que se hospedaram na data "2022-03-15":
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE COD_HOSP IN 
+		(SELECT COD_HOSP FROM HOSPEDAGEM WHERE DT_ENT = '2022-03-15');
 
-20. A data de nascimento do hóspede mais velho.
-SELECT MIN(DT_NASC) FROM HOSPEDE;
+	-- 9. Selecionar o código e o nome dos hóspedes que se hospedaram em um apartamento da categoria "Luxo":
+		SELECT COD_HOSP, NOME 
+		FROM HOSPEDE 
+		WHERE COD_HOSP IN 
+		(SELECT COD_HOSP FROM HOSPEDAGEM WHERE NUM IN 
+		(SELECT NUM FROM APARTAMENTO WHERE COD_CAT IN 
+		(SELECT COD_CAT FROM CATEGORIA WHERE NOME = 'Luxo')));
 
------------------------------------------------------------------------------------------------------------------
+	-- 10. Selecionar o código e o nome dos hóspedes que se hospedaram em um apartamento da categoria "Luxo" ou que fizeram solicitação do serviço "3":
+		SELECT COD_HOSP, NOME 
+		FROM HOSPEDE 
+		WHERE COD_HOSP IN 
+		(SELECT COD_HOSP FROM HOSPEDAGEM WHERE NUM IN 
+		(SELECT NUM FROM APARTAMENTO WHERE COD_CAT IN 
+		(SELECT COD_CAT FROM CATEGORIA WHERE NOME = 'Luxo')) OR COD_HOSPEDA IN 
+		(SELECT COD_HOSPEDA FROM SOLICITACAO WHERE COD_SERV = 3));
 
-21. A data de nascimento do hóspede mais novo.
-SELECT MAX(DT_NASC) FROM HOSPEDE;
+	-- 11. Selecionar o nome do hóspede com a data mais antiga de entrada:
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE COD_HOSP IN 
+		(SELECT COD_HOSP FROM HOSPEDAGEM WHERE DT_ENT = (SELECT MIN(DT_ENT) FROM HOSPEDAGEM));
 
------------------------------------------------------------------------------------------------------------------
-
-22. Reajuste em 10% o valor das diárias das categorias.
-UPDATE CATEGORIA SET VALOR_DIA = VALOR_DIA*10;
-
-
-23. O nome das categorias que não possuem apartamentos.
-24. O número dos apartamentos que nunca foram ocupados.
-25. O número do apartamento mais caro ocupado pelo João.
-26. O nome dos hóspedes que nunca se hospedaram no apartamento 201.
-
------------------------------------------------------------------------------------------------------------------
-
-SELECT *
-FROM HOSPEDE
-LEFT JOIN
-HOSPEDAGEM H
-ON HOSPEDE.COD_HOSP = H.COD_HOSP
-WHERE NUM = 101
-
------------------------------------------------------------------------------------------------------------------
-
-27. O nome dos hóspedes que nunca se hospedaram em apartamentos da categoria LUXO.
-28. O nome dos hóspedes que se hospedaram ou reservaram apartamento do tipo LUXO.
-29. O nome dos hóspedes que se hospedaram mas nunca reservaram apartamentos do tipo
-LUXO.
-30. O nome dos hóspedes que se hospedaram e reservaram apartamento do tipo LUXO
------------------------------------------------------------------------------------------------------------------
-1. Listagem dos hóspedes contendo nome e data de nascimento, ordenada em ordem
-crescente por nome e decrescente por data de nascimento.
-2. Listagem contendo os nomes das categorias, ordenados alfabeticamente. A coluna de
-nomes deve ter a palavra ‘Categoria’ como título.
-3. Listagem contendo os valores de diárias e os números dos apartamentos, ordenada em
-ordem decrescente de valor.
-4. Categorias que possuem apenas um apartamento.
-5. Listagem dos nomes dos hóspedes brasileiros com mês e ano de nascimento, por ordem
-decrescente de idade e por ordem crescente de nome do hóspede.
-6. Listagem com 3 colunas, nome do hóspede, número do apartamento e quantidade (número
-de vezes que aquele hóspede se hospedou naquele apartamento), em ordem decrescente de
-quantidade.
-7. Categoria cujo nome tenha comprimento superior a 15 caracteres.
-8. Número dos apartamentos ocupados no ano de 2017 com o respectivo nome da sua
-categoria.
-9. Título do livro, nome da editora que o publicou e a descrição do assunto.
-10. Crie a tabela funcionário com as atributos: cod_func, nome, dt_nascimento e salário.
-Depois disso, acrescente o cod_func como chave estrangeira nas tabelas hospedagem e
-reserva.
-11. Mostre o nome e o salário de cada funcionário. Extraordinariamente, cada funcionário
-receberá um acréscimo neste salário de 10 reais para cada hospedagem realizada.
-12. Listagem das categorias cadastradas e para aquelas que possuem apartamentos, relacionar
-também o número do apartamento, ordenada pelo nome da categoria e pelo número do
-apartamento.
-13. Listagem das categorias cadastradas e para aquelas que possuem apartamentos, relacionar
-também o número do apartamento, ordenada pelo nome da categoria e pelo número do
-apartamento. Para aquelas que não possuem apartamentos associados, escrever "não possui
-apartamento".
-14. O nome dos funcionário que atenderam o João (hospedando ou reservando) ou que
-hospedaram ou reservaram apartamentos da categoria luxo.
-15. O código das hospedagens realizadas pelo hóspede mais velho que se hospedou no
-apartamento mais caro.
-16. Sem usar subquery, o nome dos hóspedes que nasceram na mesma data do hóspede de
-código 2.
-17. O nome do hóspede mais velho que se hospedou na categoria mais cara mo ano de 2017.
-18. O nome das categorias que foram reservadas pela Maria ou que foram ocupadas pelo João
-quando ele foi atendido pelo Joaquim.
-19. O nome e a data de nascimento dos funcionários, além do valor de diária mais cara
-reservado por cada um deles.
-20. A quantidade de apartamentos ocupados por cada um dos hóspedes (mostrar o nome).
-21. A relação com o nome dos hóspedes, a data de entrada, a data de saída e o valor total
-pago em diárias (não é necessário considerar a hora de entrada e saída, apenas as datas).
-22. O nome dos hóspedes que já se hospedaram em todos os apartamentos do hotel.
+	-- 12. Selecionar o nome do hóspede com a data mais antiga de entrada em 2022:
+		SELECT NOME 
+		FROM HOSPEDE 
+		WHERE COD_HOSP IN 
+		(SELECT COD_HOSP FROM HOSPEDAGEM WHERE DT_ENT = (SELECT MIN(DT_ENT) FROM HOSPEDAGEM WHERE DT_ENT BETWEEN '2022-01-01' AND '2022-12-31'));

@@ -45,52 +45,16 @@ FROM APARTAMENTO;
 
 --------------------------------------------------------------------------------------------------------------
 8. Somatório dos preços das categorias.
-SELECT SUM(VALOR_DIA)
-FROM CATEGORIA;
-
------------------------------------------------------------------------------------------------------------------
-
 9. Média de preços das categorias.
-SELECT AVG(VALOR_DIA)
-FROM CATEGORIA;
-
------------------------------------------------------------------------------------------------------------------
-
 10. Maior preço de categoria.
-SELECT MAX(VALOR_DIA)
-FROM CATEGORIA;
-
------------------------------------------------------------------------------------------------------------------
-
 11. Menor preço de categoria.
-SELECT MIN(VALOR_DIA)
-FROM CATEGORIA;
-
------------------------------------------------------------------------------------------------------------------
-
-
 12. O preço média das diárias dos apartamentos ocupados por cada hóspede.
 13. Quantidade de apartamentos para cada categoria.
 14. Categorias que possuem pelo menos 2 apartamentos.
-
-
------------------------------------------------------------------------------------------------------------------
-
 15. Nome dos hóspedes que nasceram após 1° de janeiro de 1970.
-SELECT NOME
-FROM HOSPEDE
-WHERE DT_NASC > '1970-01-01';
------------------------------------------------------------------------------------------------------------------
-
 16. Quantidade de hóspedes.
 17. Apartamentos que foram ocupados pelo menos 2 vezes.
------------------------------------------------------------------------------------------------------------------
-
 18. Altere a tabela Hóspede, acrescentando o campo "Nacionalidade".
-alter table hospede
-add column nacionalidade varchar(50) null;
------------------------------------------------------------------------------------------------------------------
-
 19.Quantidade de hóspedes para cada nacionalidade.
 -----------------------------------------------------------------------------------------------------------------
 
@@ -110,20 +74,10 @@ UPDATE CATEGORIA SET VALOR_DIA = VALOR_DIA*10;
 -----------------------------------------------------------------------------------------------------------------
 
 23. O nome das categorias que não possuem apartamentos.
-SELECT NOME
-FROM CATEGORIA C
-LEFT JOIN APARTAMENTO A 
-ON C.COD_CAT = A.COD_CAT
-WHERE A.NUM IS NULL;
 
 -----------------------------------------------------------------------------------------------------------------
 
 24. O número dos apartamentos que nunca foram ocupados.
-SELECT A.NUM 
-FROM APARTAMENTO A 
-LEFT JOIN HOSPEDAGEM H 
-ON A.NUM = H.NUM 
-WHERE H.COD_HOSPEDA IS NULL;
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -132,13 +86,6 @@ WHERE H.COD_HOSPEDA IS NULL;
 -----------------------------------------------------------------------------------------------------------------
 
 26. O nome dos hóspedes que nunca se hospedaram no apartamento 201.
-SELECT NOME
-FROM HOSPEDE 
-EXCEPT
-SELECT NOME
-FROM HOSPEDE
-NATURAL JOIN HOSPEDAGEM 
-WHERE NUM=201
 
 -----------------------------------------------------------------------------------------------------------------
 

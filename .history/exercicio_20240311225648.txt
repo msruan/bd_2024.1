@@ -123,7 +123,7 @@ SELECT A.NUM
 FROM APARTAMENTO A 
 LEFT JOIN HOSPEDAGEM H 
 ON A.NUM = H.NUM 
-WHERE H.COD_HOSPEDA IS NULL;
+WHERE 
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -132,13 +132,6 @@ WHERE H.COD_HOSPEDA IS NULL;
 -----------------------------------------------------------------------------------------------------------------
 
 26. O nome dos hóspedes que nunca se hospedaram no apartamento 201.
-SELECT NOME
-FROM HOSPEDE 
-EXCEPT
-SELECT NOME
-FROM HOSPEDE
-NATURAL JOIN HOSPEDAGEM 
-WHERE NUM=201
 
 -----------------------------------------------------------------------------------------------------------------
 

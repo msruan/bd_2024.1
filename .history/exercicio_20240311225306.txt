@@ -110,20 +110,10 @@ UPDATE CATEGORIA SET VALOR_DIA = VALOR_DIA*10;
 -----------------------------------------------------------------------------------------------------------------
 
 23. O nome das categorias que não possuem apartamentos.
-SELECT NOME
-FROM CATEGORIA C
-LEFT JOIN APARTAMENTO A 
-ON C.COD_CAT = A.COD_CAT
-WHERE A.NUM IS NULL;
 
 -----------------------------------------------------------------------------------------------------------------
 
 24. O número dos apartamentos que nunca foram ocupados.
-SELECT A.NUM 
-FROM APARTAMENTO A 
-LEFT JOIN HOSPEDAGEM H 
-ON A.NUM = H.NUM 
-WHERE H.COD_HOSPEDA IS NULL;
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -132,13 +122,6 @@ WHERE H.COD_HOSPEDA IS NULL;
 -----------------------------------------------------------------------------------------------------------------
 
 26. O nome dos hóspedes que nunca se hospedaram no apartamento 201.
-SELECT NOME
-FROM HOSPEDE 
-EXCEPT
-SELECT NOME
-FROM HOSPEDE
-NATURAL JOIN HOSPEDAGEM 
-WHERE NUM=201
 
 -----------------------------------------------------------------------------------------------------------------
 

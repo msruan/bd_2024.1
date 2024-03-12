@@ -33,6 +33,10 @@ SELECT * FROM APARTAMENTO WHERE COD_CAT IN (1,2,3,11,34,54,24,12)
 
 --------------------------------------------------------------------------------------------------------------
 6. Apartamentos cujas categorias iniciam com a palavra ‘Luxo’.
+SELECT *
+FROM APARTAMENTO AP
+NATURAL JOIN CATEGORIA
+WHERE NOME ILIKE 'LUXO%'
 --------------------------------------------------------------------------------------------------------------
 
 7. Quantidade de apartamentos cadastrados no sistema.

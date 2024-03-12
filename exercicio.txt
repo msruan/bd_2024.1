@@ -16,8 +16,16 @@ WHERE NOME ILIKE '%LUXO%';
 
 --------------------------------------------------------------------------------------------------------------
 3. Nomes de categorias de apartamentos que foram ocupados há mais de 5 anos.
+SELECT * 
+FROM APARTAMENTO AP 
+NATURAL JOIN HOSPEDAGEM
+WHERE DT_ENT <= NOW() - INTERVAL '5 YEARS';
 --------------------------------------------------------------------------------------------------------------
-4. Apartamentos que estão ocupados, ou seja, a data de saída está vazia.
+4. Apartamentos que estão ocupados, ou seja, a data de saída está vaziaSELECT * 
+FROM APARTAMENTO AP 
+NATURAL JOIN HOSPEDAGEM
+WHERE DT_SAI IS NULL;
+
 --------------------------------------------------------------------------------------------------------------
 
 5. Apartamentos cuja categoria tenha código 1, 2, 3, 11, 34, 54, 24, 12.

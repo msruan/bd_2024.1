@@ -10,7 +10,7 @@
 	values (1,'João de Deus',NULL,10000);
 
 	alter table hospedagem 
-	add column cod_func int not null default 1 REFERENCES hospedagem(cod_func);
+	add column cod_func int not null default 1 REFERENCES funcionario(cod_func);
 
 	CREATE TABLE CATEGORIA (
 		COD_CAT INT NOT NULL,
